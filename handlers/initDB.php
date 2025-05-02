@@ -3,8 +3,8 @@
 		private $_connection;
 		private static $_instance;
 		private $_host = "localhost";
-		private $_username = "dbuser";
-		private $_password = "pcc@site80keeper";
+		private $_username = "root";
+		private $_password = "";
 		private $_database = "pccmain";
 		
 		public static function getInstance() {
