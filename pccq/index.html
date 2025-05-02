@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medgruppe Polyclinics & Diagnostic Center, Inc.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="resources/css/fluid.css">
+    <link rel="stylesheet" href="resources/css/main-menu-2.css">
+	<script type="text/javascript" charset="utf8" src="resources/js/jquery.js"></script>
+	<script>
+		var myVar;
+		var numberCalled = 0;
+		var audio = new Audio('dingdong.wav');
+
+		function releaseShow() {
+			if(document.getElementById) { document.getElementById("calledNumber").style.visibility = "visible"; document.getElementById("calledStation").style.visibility = "visible"; }
+		}
+		//blink off state
+		function releaseHide() {
+			if(document.getElementById) { document.getElementById("calledNumber").style.visibility = "hidden"; document.getElementById("calledStation").style.visibility = "hidden"; }
+		}
+
+
+		function myFunction() {
+		  myVar = setInterval(alertFunc, 10000);
+		}
+		
+		function PlaySound(soundObj) {
+		  var sound = document.getElementById(soundObj);
+		  sound.Play();
+		}
+
+		function alertFunc() {
+		  
+			 $.post("qretrieve.php",{ sessid: Math.random() },function(data) { 
+				if(data['callStation'] != "") {
+					document.getElementById("calledNumber").innerHTML = data['priorityNo'];
+					document.getElementById("calledStation").innerHTML = data['callStation'];
+
+                    /* Previous 1 */
+                    document.getElementById("calledNumber_p1").innerHTML = data['callNumber_p1'];
+					document.getElementById("calledStation_p1").innerHTML = data['callStation_p1'];
+
+                    /* Previous 2 */
+                    document.getElementById("calledNumber_p2").innerHTML = data['callNumber_p2'];
+					document.getElementById("calledStation_p2").innerHTML = data['callStation_p2'];
+
+                    /* Previous 3 */
+                    document.getElementById("calledNumber_p3").innerHTML = data['callNumber_p3'];
+					document.getElementById("calledStation_p3").innerHTML = data['callStation_p3'];
+
+					audio.play();
+				  
+					for(var i=900; i < 4500; i=i+900) {
+						setTimeout("releaseHide()",i);
+						setTimeout("releaseShow()",i+450);
+					}
+					
+				}
+			  
+			  },"json");
+		
+		}
+	</script>
+</head>
+<body onload="javascript: myFunction();">
+	
+    <div class="container">
+        <div class="wrapper">
+            <section class="center-window">
+                <div class="row">
+                    <div class="center-window-heading">
+                        <h4 style="margin-bottom: 10px;">Now Serving</h4>
+                        <div class="center-window-wrap">
+                            <div class="center-window-content">
+                                <p class="service-title" id="calledStation"></p>
+                                <p class="counter-num"></p>
+                                <p class="priority-num" id="calledNumber"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="bottom-section">
+                <div class="bottom-window">
+                    <h4 class="prev-called">Previously Called</h4>
+                    <div class="row">
+                        <div class="col span_1_of_4" style="display: flex; width: 100%; justify-content: space-between;">
+                            <figure style="margin: 0;">
+                                <p class="counter-priority"> <span class="prio-num" id="calledNumber_p1">&nbsp;</span></p>
+                                <p class="service-name" id="calledStation_p1">&nbsp;</p>
+                            </figure>
+                            <div class="vl"></div>
+                            <figure style="margin: 0;">
+                                <p class="counter-priority"> <span class="prio-num" id="calledNumber_p2">&nbsp;</span></p>
+                                <p class="service-name" id="calledStation_p2">&nbsp;</p>
+                            </figure>
+                            <div class="vl"></div>
+                            <figure style="margin: 0;">
+                                <p class="counter-priority"> <span class="prio-num" id="calledNumber_p3">&nbsp;</span></p>
+                                <p class="service-name" id="calledStation_p3">&nbsp;</p>
+                            </figure>
+                        </div> 
+                    </div>
+                </div>
+            </section>
+            <!--footer class="footer">
+                <div class="footer-content">
+                    <div class="scroll-left">
+                        <p>Welcome to OMDC Prime Medical Diagnostics. In accordance with IATF's health protocols, please wear your faceshields & facemasks inside our premises.</p>
+                    </div>
+                </div>
+            </footer-->
+        </div>
+    </div>
+    <script>
+        addEventListener("click", function() {
+    var
+          el = document.documentElement
+        , rfs =
+               el.requestFullScreen
+            || el.webkitRequestFullScreen
+            || el.mozRequestFullScreen
+    ;
+    rfs.call(el);
+});
+    </script>
+</body>
+</html>

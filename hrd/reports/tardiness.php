@@ -1,0 +1,112 @@
+<?php
+
+require_once ("../../lib/mpdf6/mpdf.php");
+require_once("../../handlers/_generics.php");
+ini_set("memory_limit",-1);
+ini_set("max_execution_time",-1);
+session_start();
+
+$con = new _init();
+
+$dtf = "$_GET[year]-$_GET[month]-01";
+list($dt2,$plbl) = $con->getArray("select last_day('$dtf'),date_format('$dtf','%M %Y');");
+
+if($_GET['dept'] != '') { $f1 = " and a.dept = '$_GET[dept]' "; }
+
+$mpdf=new mPDF('win-1252','letter','','',15,15,25,15,10,10);
+$mpdf->use_embeddedfonts_1252 = true;    // false is default
+$mpdf->SetProtection(array('print'));
+$mpdf->SetAuthor("PORT80 Solutions");
+$mpdf->SetDisplayMode(50);
+
+$html = '
+<html>
+<head>
+<style>
+body {
+	font-family: sans-serif;
+    font-size: 10px;
+}
+p {    margin: 0pt;
+}
+td { vertical-align: top; }
+.items td { }
+table thead td { 
+    text-align: center;
+    border-top: 0.1mm solid #000000;
+	border-bottom: 0.1mm solid #000000;
+}
+.eheader { border: 0.1mm solid #000000; }
+</style>
+</head>
+<body>
+
+<!--mpdf
+<htmlpageheader name="myheader">
+<table width="100%">
+	<tr>
+		<td>
+			<span style="font-size: 7pt;"><b>PRIME CARE CEBU INC.</b><br/>2nd Level, APM Centrale, A. Soriano Jr. Ave., NRA, Mabolo, Cebu City, 6000 Philippines<br/>Tel # (032) 232-2273/266-3245</span>
+		</td>
+		<td width="40%" align=right>
+			<span style="font-weight: bold; font-size: 9pt; color: #000000;">Tardiness Report</span><br /><span style="font-size: 6pt; font-style: italic;">For the Period ' . $_GET['dtf'] . " to " . $_GET['dt2'] .'</span>
+		</td>
+	</tr>
+</table>
+</htmlpageheader>
+
+<htmlpagefooter name="myfooter">
+<table style="border-top: 1px solid #000000; font-size: 7pt; width: 100%">
+<tr>
+<td width="50%" align="left">Page {PAGENO} of {nb}</td>
+<td width="50%" align="right" style="font-size:7pt;">Run Date: ' . date('m/d/Y h:s a') . '</td>
+</tr>
+</table>
+</htmlpagefooter>
+
+<sethtmlpageheader name="myheader" value="on" show-this-page="1" />
+<sethtmlpagefooter name="myfooter" value="on" />
+mpdf-->
+<table class="items" width="100%" style="font-size: 10px; border-collapse: collapse;" cellpadding="5">
+<thead>
+<tr>
+<td width="35%" align=left colspan=2><b>EMPLOYEE</b></td>
+<td width="15%" align=center><b>DEPT</b></td>
+<td width="15%" align=center><b>DATE</b></td>
+<td width="10%" align=center><b>SCHED</b></td>
+<td width="10%" align=center><b>TIME IN</b></td>
+<td width="15%" align=center><b>LATE (HRS)</b></td>
+</tr>
+</thead>
+<tbody>';
+
+	$_i = $con->dbquery("SELECT distinct a.EMP_ID, c.dept_name AS dept, CONCAT(LNAME,', ',FNAME,' ',LEFT(MNAME,1),'.') AS emp_name, DATE_FORMAT(DATE, '%m/%d/%Y %a') AS deyt, DATE, a.SHIFT, LEFT(CLOCKIN,5) AS TIME_IN,TOT_LATE FROM pccpayroll.emp_dtrfinal a LEFT JOIN pccpayroll.emp_masterfile b ON a.EMP_ID = b.EMP_ID LEFT JOIN pccpayroll.options_dept c ON b.dept = c.id WHERE `date` BETWEEN '".$con->formatDate($_GET['dtf'])."' AND '".$con->formatDate($_GET['dt2'])."' AND TOT_LATE > 0 and a.SHIFT not in (0,98,99) $f1 ORDER BY b.lname,a.date ASC;");
+	while($row = $_i->fetch_array()) {
+		//switch($row[''])
+		
+		
+		$html = $html . '<tr>
+			<td align=left width=10%>'.$row['EMP_ID'].'</td>
+			<td align=left width=25%>'.$row['emp_name'].'</td>
+			<td align=center>' . $row['dept'] . '</td>
+			<td align=center>' . $row['deyt'] . '</td>
+			<td align=center>S' . $row['SHIFT'] . '</td>
+			<td align=center>' . $row['TIME_IN'] . '</td>
+			<td align=center>' . $row['TOT_LATE'] . '</td>
+		</tr>';
+	}
+	
+$html = $html . '
+<tr><td class="blanktotal" colspan=6></td></tr>
+</tbody>
+</table>
+</body>
+</html>
+';
+
+$html = iconv("UTF-8", "ISO-8859-1//IGNORE", $html);
+$mpdf->WriteHTML($html);
+$mpdf->Output(); exit;
+exit;
+
+?>
