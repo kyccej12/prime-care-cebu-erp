@@ -1,4 +1,4 @@
-# Prime Care Cebu - ERP System
+# Prime Care Cebu - WEb ERP System
 
 ![last commit](https://img.shields.io/github/last-commit/kyccej12/prime-care-cebu-erp)   ![open pull requests](https://img.shields.io/github/issues-pr/kyccej12/prime-care-cebu-erp)
 
