@@ -15,7 +15,7 @@ The Prime Care Cebu ERP System is a comprehensive, integrated enterprise resourc
 #
 ![App Screenshot](screenshots/ss_4.jpg)
 
-# Requirements to run on local
+# Requirements
 + WAMP Server 2.5
 + Apache 2.4.9
 + PHP 5.5.12 and above
