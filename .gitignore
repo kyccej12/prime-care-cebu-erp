@@ -1,11 +1,11 @@
 # ======================
 # PHP & General Back-end
 # ======================
-# *.log
-# *.cache
-# *.env
-# .env.*
-# .phpunit.result.cache
+*.log
+*.cache
+*.env
+.env.*
+.phpunit.result.cache
 
 # ======================
 # SQL Files
@@ -19,13 +19,4 @@
 # ======================
 # Custom folders (edit as needed)
 # ======================
-
-/images/attachments/
-/images/photos/peme/
-/images/signatures/
-/hrd/photos/
-/hrd/temp/
 /lib/
-/style/
-/ui-assets/
-/uploads/
