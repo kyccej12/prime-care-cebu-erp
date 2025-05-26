@@ -811,6 +811,7 @@
 										<option value = '16'>NURSING - WATERFRONT</option>
 										<option value = '33'>NURSING - CCLEX</option>
 										<option value = '34'>NURSING - AUTOLIV</option>
+										<option value = '47'>DISTECH</option>
 									";
 					break;
 				}
