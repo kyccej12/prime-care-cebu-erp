@@ -26,7 +26,7 @@
 
 		if($_GET['customer'] != '') { $searchString .= " and a.customer_code = '" .  substr($_GET['customer'],1,6) . "' ";  }
 		
-		$query = $mydb->dbquery("SELECT 'so' AS `type`, a.so_no, DATE_FORMAT(a.so_date,'%m/%d/%Y') AS sodate,'' AS or_no, '' AS ordate, a.customer_code, a.customer_name, a.patient_id, a.patient_name, c.description AS xterms, b.code,b.description, a.amount, '0' AS charge_sales, '0' AS cash_sales, '0' AS cc_sales, '0' AS check_sales FROM so_header a LEFT JOIN so_details b ON a.trace_no = b.trace_no LEFT JOIN options_terms c ON a.terms = c.terms_id WHERE a.status = 'Finalized' AND a.so_date BETWEEN '$dtf' AND '$dt2' $searchString GROUP BY patient_id ORDER BY so_no;");
+		$query = $mydb->dbquery("SELECT 'so' AS `type`, a.so_no, DATE_FORMAT(a.so_date,'%m/%d/%Y') AS sodate,'' AS or_no, '' AS ordate, a.customer_code, a.customer_name, a.patient_id, a.patient_name, a.patient_address, c.description AS xterms, b.code,b.description, a.amount, '0' AS charge_sales, '0' AS cash_sales, '0' AS cc_sales, '0' AS check_sales FROM so_header a LEFT JOIN so_details b ON a.trace_no = b.trace_no LEFT JOIN options_terms c ON a.terms = c.terms_id WHERE a.status = 'Finalized' AND a.so_date BETWEEN '$dtf' AND '$dt2' $searchString GROUP BY patient_id ORDER BY so_no;");
 
 	
 	/* END OF SQL QUERIES */
@@ -90,6 +90,8 @@ mpdf-->
 			<td align=center><b>SO DATE</b></td>
 			<td align=center><b>BILLED TO</b></td>
 			<td align=center><b>PATIENT NAME</b></td>
+			<td align=center><b>PATIENT ADDR</b></td>
+			<td align=center><b>CONTACT#</b></td>
 			<td align=center><b>EMPLOYER</b></td>
 			<td align=center><b>TERMS</b></td>
 			<td  align=center><b>CODE</b></td>
@@ -101,7 +103,10 @@ mpdf-->
 
 $cashGT = 0; $i = 1;
 while($row = $query->fetch_array()) {
+
+
 	list($employer) = $mydb->getArray("select employer from patient_info where patient_id = '$row[patient_id]';");
+	list($contactnum) = $mydb->getArray("select mobile_no from patient_info where patient_id = '$row[patient_id]';");
 	if($row['customer_code'] != 0) { $billedto = $row['customer_name']; } else { $billedto = 'PATIENT'; }
 
 	if($row['type'] == 'so') {
@@ -115,6 +120,8 @@ while($row = $query->fetch_array()) {
 		<td align=center>' . $row['sodate'] . '</td>
 		<td align=left width=15%>' . $billedto . '</td>
 		<td align=left width=15%>'. $row['patient_name'] .'</td>
+		<td align=left>'. $row['patient_address'] .'</td>
+		<td align=left>'. $contactnum .'</td>
 		<td align=left>'.  $employer . '</td>
 		<td align=center>'. $row['xterms'] .'</td>
 		<td align=center>'. $row['code'] .'</td>
@@ -124,7 +131,7 @@ while($row = $query->fetch_array()) {
 }
 
 $html = $html . '<tr bgcolor="'.$mydb->initBackground($i).'">
-					<td colspan=8 align=left><b>GRAND TOTAL</b></td>
+					<td colspan=10 align=left><b>GRAND TOTAL</b></td>
 					<td align=right><b>' .number_format($cashGT,2) . '</b></td>
 			     </tr>';
 $html = $html . '</tbody></table>
