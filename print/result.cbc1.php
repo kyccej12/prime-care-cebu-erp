@@ -86,7 +86,7 @@ $html = '
 	</tr>
 	<tr>
 		<td><b>REQUESTING PHYSICIAN</b></td>
-		<td>:&nbsp;&nbsp;'.$_ihead['physician'].'</td>
+		<td>:&nbsp;&nbsp;'.$_ihead['physician'].'</td>'
 		<td><b>PATIENT STATUS</b></td>
 		<td>:&nbsp;&nbsp;'.$_ihead['patientstatus'].'</td>
 	</tr>

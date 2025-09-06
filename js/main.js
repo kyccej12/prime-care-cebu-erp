@@ -1593,14 +1593,14 @@ function showCensusReport() {
 						"minimizable" : true
 					});
 				}
+			},
+			{
+				text: "Export Report to Excel",
+				icons: { primary: "ui-icon-folder-open" },
+				click: function() {	
+					window.open("export/dcr.php?dtf="+$("#dcr_dtf").val()+"&dt2="+$("#dcr_dt2").val()+"&customer="+$("#dcr_customer").val()+"&uid="+$("#dcr_uid").val()+"&sid="+Math.random()+"","Detailed Sales Report","location=1,status=1,scrollbars=1,width=640,height=720");
+				}
 			}
-			// {
-			// 	text: "Export Report to Excel",
-			// 	icons: { primary: "ui-icon-folder-open" },
-			// 	click: function() {	
-			// 		window.open("export/dcr.php?dtf="+$("#dcr_dtf").val()+"&dt2="+$("#dcr_dt2").val()+"&customer="+$("#dcr_customer").val()+"&uid="+$("#dcr_uid").val()+"&sid="+Math.random()+"","Detailed Sales Report","location=1,status=1,scrollbars=1,width=640,height=720");
-			// 	}
-			// }
 		]
 	});
 }
